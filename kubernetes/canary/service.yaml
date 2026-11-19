@@ -6,6 +6,7 @@ metadata:
 spec:
   selector:
     app: lab4-devops-app
+    version: canary
   ports:
     - port: 80
       targetPort: 5000
