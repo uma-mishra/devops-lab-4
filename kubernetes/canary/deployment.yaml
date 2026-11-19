@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lab4-canary
+  namespace: lab4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lab4-devops-app
+      version: canary
+  template:
+    metadata:
+      labels:
+        app: lab4-devops-app
+        version: canary
+    spec:
+      containers:
+        - name: app
+          image: lab4-advanced-devops-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+          env:
+            - name: APP_ENV
+              value: "canary"
+            - name: APP_VERSION
+              value: "2.0.0"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 15
